@@ -39,9 +39,13 @@ export function SiteHeader() {
         )}
       >
         <a href="#top" className="flex items-center gap-2.5">
-          <span className="flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <Scale className="size-4" />
-          </span>
+          <Image
+            src="/app-icon.png"
+            alt="准典 LexPilot 图标"
+            width={32}
+            height={32}
+            className="size-8 rounded-md"
+          />
           <span className="flex items-baseline gap-1.5">
             <span className="font-serif text-lg font-semibold tracking-tight text-foreground">
               准典

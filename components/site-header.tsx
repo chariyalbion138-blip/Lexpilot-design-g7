@@ -1,17 +1,18 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
 import { motion } from 'motion/react'
-import { Scale } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 const navItems = [
-  { label: '能力矩阵', href: '#capabilities' },
-  { label: '使用流程', href: '#process' },
-  { label: '客户口碑', href: '#testimonials' },
-  { label: '常见问题', href: '#faq' },
+  { label: '能力矩阵', href: '/#capabilities' },
+  { label: '使用流程', href: '/#process' },
+  { label: '定价方案', href: '/pricing' },
+  { label: '常见问题', href: '/#faq' },
 ]
 
 export function SiteHeader() {
@@ -38,7 +39,7 @@ export function SiteHeader() {
             'mt-3 max-w-5xl rounded-full border border-border/70 bg-background/80 px-5 shadow-sm backdrop-blur-xl',
         )}
       >
-        <a href="#top" className="flex items-center gap-2.5">
+        <Link href="/" className="flex items-center gap-2.5">
           <Image
             src="/app-icon.png"
             alt="准典 LexPilot 图标"
@@ -54,7 +55,7 @@ export function SiteHeader() {
               LEXPILOT
             </span>
           </span>
-        </a>
+        </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
           {navItems.map((item) => (
@@ -74,12 +75,12 @@ export function SiteHeader() {
             size="sm"
             className="hidden sm:inline-flex"
             nativeButton={false}
-            render={<a href="#login" />}
+            render={<Link href="/login" />}
           >
             登录
           </Button>
-          <Button size="sm" nativeButton={false} render={<a href="#cta" />}>
-            预约演示
+          <Button size="sm" nativeButton={false} render={<Link href="/login" />}>
+            免费试用
           </Button>
         </div>
       </div>

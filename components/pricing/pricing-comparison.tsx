@@ -5,36 +5,42 @@ import { Check, Minus } from 'lucide-react'
 import { Reveal } from '@/components/motion-primitives'
 import { cn } from '@/lib/utils'
 
-const tiers = ['执业版', '律所版', '企业版']
+const tiers = ['体验版', '基础版', '专业版', '旗舰版']
 
 type Row = { label: string; values: (boolean | string)[] }
 
 const groups: { title: string; rows: Row[] }[] = [
   {
-    title: '合同能力',
+    title: '核心配额（每月）',
     rows: [
-      { label: '合同智能生成', values: ['每月 80 份', '不限量', '不限量'] },
-      { label: '合同条款修订与比对', values: [true, true, true] },
-      { label: '条款风险分级提示', values: ['基础', '增强', '定制策略'] },
-      { label: '团队模板库沉淀', values: [false, true, true] },
+      { label: '法研 Agent', values: ['5 次', '200 次', '1000 次', '10000 次'] },
+      { label: '合同生成', values: ['5 次', '200 次', '1000 次', '不限量'] },
+      { label: '合同修订', values: ['5 次', '200 次', '1000 次', '不限量'] },
     ],
   },
   {
     title: '诉讼与研究',
     rows: [
-      { label: '诉讼要点梳理', values: [true, true, true] },
-      { label: '证据与时间线管理', values: [false, true, true] },
-      { label: '法律研究检索库', values: ['标准库', '增强库 + 类案', '定制数据'] },
-      { label: '类案推荐与裁判倾向', values: [false, true, true] },
+      { label: '诉讼要点梳理', values: [true, true, true, true] },
+      { label: '证据与时间线管理', values: [false, true, true, true] },
+      {
+        label: '法律研究检索库',
+        values: ['标准库', '标准库', '增强库 + 类案', '定制数据'],
+      },
+      { label: '类案推荐与裁判倾向', values: [false, false, true, true] },
     ],
   },
   {
     title: '协作与安全',
     rows: [
-      { label: '权限分级与协作审阅', values: [false, true, true] },
-      { label: '私有化 / 专属部署', values: [false, false, true] },
-      { label: '安全审计与 SLA', values: [false, '标准', '企业级'] },
-      { label: '支持方式', values: ['工单', '专属客户经理', '7×24 专属团队'] },
+      { label: '团队模板库沉淀', values: [false, false, true, true] },
+      { label: '权限分级与协作审阅', values: [false, false, true, true] },
+      { label: '私有化 / 专属部署', values: [false, false, false, true] },
+      { label: '安全审计与 SLA', values: [false, false, '标准', '企业级'] },
+      {
+        label: '支持方式',
+        values: ['社区', '邮件工单', '专属客户经理', '7×24 专属团队'],
+      },
     ],
   },
 ]
@@ -61,7 +67,7 @@ export function PricingComparison() {
 
       <Reveal delay={0.1} className="mt-10 overflow-hidden rounded-xl border border-border bg-card shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[640px] border-collapse text-left">
+          <table className="w-full min-w-[760px] border-collapse text-left">
             <thead>
               <tr className="border-b border-border">
                 <th className="px-6 py-4 text-sm font-semibold text-foreground">功能</th>
@@ -70,7 +76,7 @@ export function PricingComparison() {
                     key={t}
                     className={cn(
                       'px-6 py-4 text-center text-sm font-semibold text-foreground',
-                      i === 1 && 'bg-gold/5',
+                      i === 2 && 'bg-gold/5',
                     )}
                   >
                     {t}
@@ -80,10 +86,10 @@ export function PricingComparison() {
             </thead>
             <tbody>
               {groups.map((g) => (
-                <>
-                  <tr key={g.title} className="bg-secondary/50">
+                <Fragment key={g.title}>
+                  <tr className="bg-secondary/50">
                     <td
-                      colSpan={4}
+                      colSpan={tiers.length + 1}
                       className="px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground"
                     >
                       {g.title}
@@ -95,14 +101,14 @@ export function PricingComparison() {
                       {row.values.map((v, i) => (
                         <td
                           key={i}
-                          className={cn('px-6 py-3.5 text-center', i === 1 && 'bg-gold/5')}
+                          className={cn('px-6 py-3.5 text-center', i === 2 && 'bg-gold/5')}
                         >
                           <Cell value={v} />
                         </td>
                       ))}
                     </tr>
                   ))}
-                </>
+                </Fragment>
               ))}
             </tbody>
           </table>

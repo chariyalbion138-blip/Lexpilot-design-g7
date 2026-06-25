@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Check, Loader2, ShieldCheck } from 'lucide-react'
+import { Check, Loader2, QrCode, Smartphone, ShieldCheck } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -11,7 +11,19 @@ import { cn } from '@/lib/utils'
 const PHONE_RE = /^1[3-9]\d{9}$/
 const COUNTDOWN = 60
 
+type LoginMethod = 'phone' | 'wechat'
+
+function WechatIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M8.69 4C4.62 4 1.32 6.74 1.32 10.12c0 1.94 1.1 3.67 2.82 4.8l-.7 2.13 2.48-1.25c.88.24 1.8.37 2.77.37.24 0 .48-.01.72-.03a4.6 4.6 0 0 1-.2-1.34c0-2.94 2.84-5.32 6.34-5.32.23 0 .46.01.69.03C15.5 5.92 12.42 4 8.69 4Zm-2.4 3.2a.92.92 0 1 1 0 1.84.92.92 0 0 1 0-1.84Zm4.8 0a.92.92 0 1 1 0 1.84.92.92 0 0 1 0-1.84Z" />
+      <path d="M22.68 14.77c0-2.83-2.78-5.13-6.2-5.13s-6.2 2.3-6.2 5.13c0 2.84 2.78 5.13 6.2 5.13.74 0 1.46-.11 2.13-.31l1.95.98-.55-1.66c1.62-.94 2.67-2.45 2.67-4.14Zm-8.16-1.18a.77.77 0 1 1 0 1.54.77.77 0 0 1 0-1.54Zm3.92 0a.77.77 0 1 1 0 1.54.77.77 0 0 1 0-1.54Z" />
+    </svg>
+  )
+}
+
 export function LoginForm() {
+  const [method, setMethod] = useState<LoginMethod>('phone')
   const [phone, setPhone] = useState('')
   const [code, setCode] = useState('')
   const [agreed, setAgreed] = useState(false)
@@ -97,6 +109,76 @@ export function LoginForm() {
     )
   }
 
+  const agreementCheckbox = (
+    <label className="flex cursor-pointer items-start gap-2.5 text-xs leading-relaxed text-muted-foreground">
+      <button
+        type="button"
+        role="checkbox"
+        aria-checked={agreed}
+        onClick={() => setAgreed((v) => !v)}
+        className={cn(
+          'mt-0.5 flex size-4 shrink-0 items-center justify-center rounded border transition-colors',
+          agreed ? 'border-gold bg-gold text-gold-foreground' : 'border-input bg-background',
+        )}
+      >
+        {agreed && <Check className="size-3" />}
+      </button>
+      <span>
+        我已阅读并同意
+        <a href="#" className="text-foreground underline underline-offset-2 hover:text-gold">
+          《服务协议》
+        </a>
+        和
+        <a href="#" className="text-foreground underline underline-offset-2 hover:text-gold">
+          《隐私政策》
+        </a>
+      </span>
+    </label>
+  )
+
+  if (method === 'wechat') {
+    return (
+      <div className="rounded-2xl border border-border bg-card p-8 shadow-sm">
+        <h2 className="font-serif text-2xl font-semibold text-foreground">微信登录</h2>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+          打开微信扫一扫，扫描下方二维码完成登录。
+        </p>
+
+        <div className="mt-7 flex flex-col items-center">
+          <div className="relative flex size-48 items-center justify-center rounded-xl border border-border bg-muted/40">
+            <QrCode className="size-32 text-foreground/80" strokeWidth={1.2} />
+            <span className="absolute -bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-[#07c160] px-3 py-1 text-xs font-medium text-white">
+              <WechatIcon className="size-3.5" />
+              微信扫码
+            </span>
+          </div>
+          <p className="mt-6 text-xs text-muted-foreground">二维码 5 分钟内有效，请尽快扫码</p>
+        </div>
+
+        <div className="mt-7 flex flex-col gap-4">
+          {agreementCheckbox}
+          {error && (
+            <p className="text-sm text-destructive" role="alert">
+              {error}
+            </p>
+          )}
+          <Button
+            type="button"
+            variant="outline"
+            className="h-11 w-full gap-2 text-sm"
+            onClick={() => {
+              setError(null)
+              setMethod('phone')
+            }}
+          >
+            <Smartphone className="size-4" />
+            使用手机号登录
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="rounded-2xl border border-border bg-card p-8 shadow-sm">
       <h2 className="font-serif text-2xl font-semibold text-foreground">
@@ -160,32 +242,7 @@ export function LoginForm() {
         </div>
 
         {/* 协议确认 */}
-        <label className="flex cursor-pointer items-start gap-2.5 text-xs leading-relaxed text-muted-foreground">
-          <button
-            type="button"
-            role="checkbox"
-            aria-checked={agreed}
-            onClick={() => setAgreed((v) => !v)}
-            className={cn(
-              'mt-0.5 flex size-4 shrink-0 items-center justify-center rounded border transition-colors',
-              agreed
-                ? 'border-gold bg-gold text-gold-foreground'
-                : 'border-input bg-background',
-            )}
-          >
-            {agreed && <Check className="size-3" />}
-          </button>
-          <span>
-            我已阅读并同意
-            <a href="#" className="text-foreground underline underline-offset-2 hover:text-gold">
-              《服务协议》
-            </a>
-            和
-            <a href="#" className="text-foreground underline underline-offset-2 hover:text-gold">
-              《隐私政策》
-            </a>
-          </span>
-        </label>
+        {agreementCheckbox}
 
         {error && (
           <p className="text-sm text-destructive" role="alert">
@@ -195,6 +252,25 @@ export function LoginForm() {
 
         <Button type="submit" className="h-11 w-full text-sm" disabled={submitting}>
           {submitting ? <Loader2 className="size-4 animate-spin" /> : '登录 / 注册'}
+        </Button>
+
+        <div className="flex items-center gap-3">
+          <span className="h-px flex-1 bg-border" />
+          <span className="text-xs text-muted-foreground">其他登录方式</span>
+          <span className="h-px flex-1 bg-border" />
+        </div>
+
+        <Button
+          type="button"
+          variant="outline"
+          className="h-11 w-full gap-2 text-sm"
+          onClick={() => {
+            setError(null)
+            setMethod('wechat')
+          }}
+        >
+          <WechatIcon className="size-4 text-[#07c160]" />
+          微信登录
         </Button>
 
         <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">

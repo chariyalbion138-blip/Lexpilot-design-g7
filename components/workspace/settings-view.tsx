@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'motion/react'
 import {
   BadgeCheck,
   ChevronRight,
@@ -13,6 +14,11 @@ import {
 
 import { Button } from '@/components/ui/button'
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: 'easeOut' } },
+}
+
 function SectionCard({
   title,
   children,
@@ -21,12 +27,15 @@ function SectionCard({
   children: React.ReactNode
 }) {
   return (
-    <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+    <motion.section
+      variants={fadeUp}
+      className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm"
+    >
       <div className="px-6 pt-5 pb-1">
         <h2 className="font-serif text-base font-semibold text-foreground">{title}</h2>
       </div>
       <div className="divide-y divide-border/70">{children}</div>
-    </section>
+    </motion.section>
   )
 }
 
@@ -75,9 +84,17 @@ export function SettingsView() {
         <p className="mt-1.5 text-sm text-muted-foreground">管理您的个人信息与账号安全</p>
       </header>
 
-      <div className="flex flex-col gap-6">
+      <motion.div
+        initial="hidden"
+        animate="show"
+        variants={{ show: { transition: { staggerChildren: 0.08 } } }}
+        className="flex flex-col gap-6"
+      >
         {/* 账户概览 */}
-        <section className="flex items-center gap-4 rounded-2xl border border-border bg-card p-6 shadow-sm">
+        <motion.section
+          variants={fadeUp}
+          className="flex items-center gap-4 rounded-2xl border border-border bg-card p-6 shadow-sm"
+        >
           <div className="flex size-16 shrink-0 items-center justify-center rounded-full bg-primary text-2xl font-medium text-primary-foreground">
             Z
           </div>
@@ -97,7 +114,7 @@ export function SettingsView() {
             <Pencil className="size-3.5" />
             更换头像
           </Button>
-        </section>
+        </motion.section>
 
         {/* 基本信息 */}
         <SectionCard title="基本信息">
@@ -151,7 +168,7 @@ export function SettingsView() {
         </SectionCard>
 
         {/* 操作 */}
-        <div className="mt-2 flex flex-col gap-3 sm:flex-row">
+        <motion.div variants={fadeUp} className="mt-2 flex flex-col gap-3 sm:flex-row">
           <Button
             variant="outline"
             className="flex-1 border-destructive/40 text-destructive hover:bg-destructive/5 hover:text-destructive"
@@ -162,8 +179,8 @@ export function SettingsView() {
             <LogOut className="size-4" />
             退出登录
           </Button>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   )
 }
